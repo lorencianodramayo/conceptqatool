@@ -1,0 +1,73 @@
+.HomePage{
+    background-color: #0d0423;
+    background: url('../assets/homepage/background.svg');
+    background-origin: content-box;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: inherit;
+
+    .HomePage-column{
+        box-shadow: 1px 0 8px #0000006b;
+        .ant-card{
+            height: 100vh;
+            .ant-card-head{
+                align-items: flex-end;
+                background-color: #14033c;
+                background: url('../assets/homepage/background.svg');
+                background-position-x: 0;
+                background-position-y: 27%;
+                background-repeat: no-repeat;
+                background-size: 151%;
+                border-radius: 0;
+                display: flex;
+                min-height: 12em;
+                
+                .ant-card-head-wrapper{
+                    .ant-card-head-title{
+                        h1{
+                            color: #fff;
+                            font-weight: 800;
+                            span{
+                                -webkit-text-fill-color: transparent;
+                                -moz-text-fill-color: transparent;
+                                -webkit-background-clip: text;
+                                -moz-background-clip: text;
+                                background-image: linear-gradient(90deg, #e0238c, #f22076 47.43%, #f96666);
+                                background-size: 100%;
+                                color: #29125f;
+                                word-break: break-word;
+                                z-index: 3;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .ant-card-body{
+                height: calc(100% - 250px);
+                overflow-y: scroll; 
+                overflow-x: hidden;
+                .ant-typography{
+                    color: #5025c4;
+                }
+            }
+
+            .ant-card-actions{
+                padding: 0 24px;
+                li:first-child{
+                    text-align: left;
+                    span{
+                        cursor: auto;
+                    }
+                }
+
+                li:last-child{
+                    text-align: right;
+                    span{
+                        cursor: auto;
+                    }
+                }
+            }
+        }
+    }
+}
