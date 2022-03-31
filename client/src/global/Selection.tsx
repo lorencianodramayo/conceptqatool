@@ -42,7 +42,7 @@ const Selection: FC<SelectionName> = ({ name, data, status }) => {
                         Array.from(new Set(data && data.map((data: any) => data.suitableChannels.join())))
                             .filter(item => item !== "social,video")
                             .map((data: any, index: any) => {
-                                return <Option value={data.charAt(0).toUpperCase() + data.slice(1)} key={index} style={{ textTransform: 'capitalize' }}>{data.charAt(0).toUpperCase() + data.slice(1)}</Option>
+                                return <Option value={data} key={index} style={{ textTransform: 'capitalize' }}>{data.charAt(0).toUpperCase() + data.slice(1)}</Option>
                     })
                 }
             </Select>
