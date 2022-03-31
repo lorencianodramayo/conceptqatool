@@ -1,6 +1,6 @@
 import React, { FC, createRef, useRef } from 'react';
 import axios from 'axios';
-import { Row, Col, Card, Typography, Form, Button, Carousel, Checkbox, Select } from 'antd';
+import { Row, Col, Card, Typography, Form, Button, Carousel, Checkbox, Select, Modal } from 'antd';
 import { useMount, useSetState } from 'ahooks';
 
 
@@ -22,6 +22,7 @@ interface State {
     partner: any;
     concept: any;
     channel: any;
+    showModal: boolean;
 }
 
 export type TObjects = Objects[];
@@ -43,7 +44,8 @@ const HomePage: FC = () => {
         channel: {
             data: [],
             status: false,
-        }
+        },
+        showModal: false
     });
 
     useMount(() => {
@@ -86,7 +88,7 @@ const HomePage: FC = () => {
 
     return (
         <Row className="HomePage">
-            <Col xs={24} sm={24} md={12} xl={10} xxl={12} className="HomePage-column">
+            <Col xs={24} sm={24} md={12} xl={8} xxl={10} className="HomePage-column">
                 <Card 
                     title={<Title>Concept <span>QA Tool</span></Title>} 
                     bordered={false} 
@@ -117,18 +119,23 @@ const HomePage: FC = () => {
                                                 return data.suitableChannels[0] === form.getFieldsValue().Channel && data.suitableChannels.length === 1?
                                                    <React.Fragment key={index}>
                                                        <Col span={1}>
-                                                           <Form.Item>
+                                                            <Form.Item name={data._id} valuePropName="checked" style={{ margin: 0 }}>
                                                                <Checkbox />
                                                            </Form.Item>
                                                        </Col>
 
-                                                       <Col span={7}>{data.size}</Col>
+                                                        <Col span={7} style={{ display: "flex", fontWeight: 700, alignItems: "center", justifyContent: "center", whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', paddingLeft: '0.8em' }}>{data.size}</Col>
 
                                                        <Col span={11}>
                                                            <Form.Item name={`${data._id}_creativeVersion`} style={{margin: 0}}>
                                                                <Select
                                                                 disabled={false}
                                                                 placeholder={/^-?\d+$/.test(data.versionName) || data.versionName === null ? `Version ${data.version + 1}` : data.versionName}
+                                                                allowClear
+                                                                showSearch
+                                                                filterOption={(input: string, option: any) =>
+                                                                    option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                                                }
                                                                >
                                                                    <Option value="demo">Version 1</Option>
                                                                </Select>
@@ -136,7 +143,7 @@ const HomePage: FC = () => {
                                                        </Col>
 
                                                        <Col span={5}>
-                                                           <Button block>Preview</Button>
+                                                           <Button block onClick={()=>setState({showModal: true})}>Preview</Button>
                                                        </Col>
                                                     </React.Fragment>
                                                 : null
@@ -144,6 +151,18 @@ const HomePage: FC = () => {
                                         :
                                         null
                                     }
+                                    <Modal 
+                                        centered 
+                                        title="Preview" 
+                                        visible={state.showModal}
+                                        footer={null}
+                                        onOk={() => setState({ showModal: false }) }
+                                        onCancel={() => setState({ showModal: false }) }
+                                    >
+                                        <p>Some contents...</p>
+                                        <p>Some contents...</p>
+                                        <p>Some contents...</p>
+                                    </Modal>
                                 </Row>
                             </div>
                         </Carousel>
