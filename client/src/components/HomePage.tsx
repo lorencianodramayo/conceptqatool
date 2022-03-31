@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Row, Col, Card, Typography, Form, Button } from 'antd';
 import { useMount, useSetState } from 'ahooks';
 
+
 import Selection from '../global/Selection';
 
 import './HomePage.less';
@@ -62,7 +63,7 @@ const HomePage: FC = () => {
 
     return (
         <Row className="HomePage">
-            <Col xs={24} sm={24} md={13} xl={10} xxl={13} className="HomePage-column">
+            <Col xs={24} sm={24} md={12} xl={10} xxl={12} className="HomePage-column">
                 <Card 
                     title={<Title>Concept <span>QA Tool</span></Title>} 
                     bordered={false} 
@@ -77,8 +78,7 @@ const HomePage: FC = () => {
                         form={form}
                         layout="vertical"
                         onValuesChange={onRequiredTypeChange}
-                        requiredMark={true}
-                    >
+                    > 
                         <Selection name="Partner" data={state.partner.data.body} status={state.partner.status} />
                         <Selection name="Concept" data={state.concept.data.body} status={state.concept.status} />
                         <Selection name="Channel" data={state.channel.data.body && state.channel.data.body.templates !== undefined ? state.channel.data.body.templates : null} status={state.channel.status} />
