@@ -37,7 +37,7 @@ const Selection: FC<SelectionName> = ({ name, data, status }) => {
             >
                 {
                     name !== "Channel" ?
-                        data && data.map((data:any) =>  <Option key={data._id} value={data._id}>{data.name}</Option>)
+                        data && data.sort((a: any, b: any) => a.name > b.name ? 1 : -1).map((data:any) =>  <Option key={data._id} value={data._id}>{data.name}</Option>)
                     : 
                         Array.from(new Set(data && data.map((data: any) => data.suitableChannels.join())))
                             .filter(item => item !== "social,video")
