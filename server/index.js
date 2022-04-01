@@ -11,6 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 8080; // Step 1
 
 const adlibAPI = require("./routes/adlibAPI");
+const playgroundAPI = require("./routes/playgroundAPI");
 
 // Step 2
 mongoose.connect(process.env.MONGODB_URI, {
@@ -47,6 +48,7 @@ app.use(morgan("tiny"));
 
 //APIs
 app.use("/adlibAPI", adlibAPI);
+app.use("/playgroundAPI", playgroundAPI)
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));

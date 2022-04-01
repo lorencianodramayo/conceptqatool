@@ -1,0 +1,30 @@
+.Stage{
+    padding: 1em;
+    .header{
+        padding: 0.5em;
+        background-color: #fff;
+        .title{
+            -webkit-text-fill-color: transparent;
+            -moz-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
+            background-image: linear-gradient(90deg, #e0238c, #f22076 47.43%, #f96666);
+            background-size: 100%;
+            color: #29125f;
+            word-break: break-word;
+            z-index: 3;
+            font-weight: 800;
+        }
+    }
+
+    .content{
+        align-items: center;
+        background: #ececec;
+        background-image: url(../assets/playground/board.svg);
+        border: 1px solid #b1b1b1;
+        display: flex;
+        justify-content: center;
+        margin-top: 0.5em;
+        min-height: calc(100vh - 130px); 
+    }
+}

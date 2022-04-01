@@ -1,0 +1,57 @@
+.Playground {
+  min-height: 100vh !important;
+  background: #fff !important;
+  header {
+    height: 48px;
+    background: #29125f;
+    padding: 0;
+    .ant-row {
+      height: inherit;
+      .ant-col {
+        height: inherit;
+        .logo {
+          float: left;
+          width: 173px;
+          height: inherit;
+          position: relative;
+          display: flex;
+          align-items: center;
+          padding: 0 3em;
+          img {
+            width: auto;
+            height: 2.5em;
+          }
+        }
+        .ant-menu {
+          height: inherit;
+          background: transparent;
+          .ant-menu-item {
+            margin: 0.5em 0.2em 0;
+            border-radius: 0.3em 0.3em 0 0;
+            display: flex;
+            align-items: center;
+            &:hover {
+              color: #f22076;
+              background-color: #29125f;
+              a {
+                color: #f22076;
+              }
+            }
+          }
+          .ant-menu-item-selected {
+            background-color: #fff !important;
+            color: #f22076;
+            span {
+              background-color: transparent;
+              color: #f22076;
+              line-height: normal;
+              a {
+                color: #f22076;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

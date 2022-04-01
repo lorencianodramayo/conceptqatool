@@ -1,58 +1,68 @@
 import React, { FC } from 'react';
-import { Layout, Menu } from 'antd';
-import { useSetState } from 'ahooks';
-import {
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    UserOutlined,
-    VideoCameraOutlined,
-    UploadOutlined,
-} from '@ant-design/icons';
+import { useSetState, useSessionStorageState } from 'ahooks';
+import { useParams, Link } from "react-router-dom";
+import { Layout, Menu, Row, Col } from 'antd';
+import Icon, {
+    ExperimentOutlined,
+    BlockOutlined,
+} from "@ant-design/icons";
 
-const { Header, Sider, Content } = Layout;
+//components
+import Stage from './Stage';
+import Preview from './Preview';
+
+import './Playground.less';
+import logo from "../assets/playground/main-logo.svg";
+
+const { Header, Content, Footer } = Layout;
 
 interface State {
-    collapsed: boolean;
+   data: object;
 }
 
 const Playground: FC = () => {
     const [state, setState] = useSetState<State>({
-        collapsed: false
+        data: {}
     });
 
-    const toggle = () => {
-        setState({ collapsed: !state.collapsed });
+    const [menuKey, setMenuKey] = useSessionStorageState('header-menu', {
+        defaultValue: 'playground',
+    });
+    
+    const showPanels = (e: any) => {
+        setMenuKey(e.key)
     }
-
     return (
-        <Layout>
-            <Sider trigger={null} collapsible collapsed={state.collapsed}>
-                <div className="logo" />
-                <Menu mode="inline" defaultSelectedKeys={['1']}>
-                    <Menu.Item key="1" icon={<UserOutlined />}>
-                        nav 1
-                    </Menu.Item>
-                    <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-                        nav 2
-                    </Menu.Item>
-                    <Menu.Item key="3" icon={<UploadOutlined />}>
-                        nav 3
-                    </Menu.Item>
-                </Menu>
-            </Sider>
-            <Layout className="site-layout">
-                <Header className="site-layout-background" style={{ padding: 0 }}>
-                    {React.createElement(state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                        className: 'trigger',
-                        onClick: toggle,
-                    })}
-                </Header>
-                <Content
-                    className="site-layout-background"
-                >
-                    Content
-                </Content>
-            </Layout>
+        <Layout className="Playground">
+            <Header>
+                <Row>
+                    <Col>
+                        <div className="logo">
+                            <Link to={`/`}>
+                                <img src={logo} alt="QA" />
+                            </Link>
+                        </div>
+                        <Menu
+                            theme="dark"
+                            mode="horizontal"
+                            defaultSelectedKeys={[`${menuKey}`]}
+                            onClick={(e)=>showPanels(e)}
+                        >
+                            <Menu.Item key="playground" icon={<ExperimentOutlined />}>
+                                Playground
+                            </Menu.Item>
+                            <Menu.Item key="preview" icon={<BlockOutlined />}>
+                                Preview
+                            </Menu.Item>
+                        </Menu>
+                    </Col>
+                </Row>
+            </Header>
+            <Content>
+                {
+                    menuKey === 'playground' ? <Stage /> : <Preview />
+                }
+            </Content>
         </Layout>
     );
 }

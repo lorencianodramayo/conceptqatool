@@ -3,7 +3,7 @@ import axios from 'axios';
 import { EyeOutlined } from '@ant-design/icons';
 import { Row, Col, Card, Typography, Form, Button, Carousel, Checkbox, Select, Modal } from 'antd';
 import { useMount, useSetState } from 'ahooks';
-
+import { useNavigate } from "react-router-dom";
 
 import Selection from '../global/Selection';
 
@@ -32,8 +32,9 @@ export type TObjects = Objects[];
 
 const HomePage: FC = () => {
     const [form] = Form.useForm();
+    const navigate = useNavigate();
     const carouselRef: any = createRef();
-    const formRef = useRef(null)
+    const formRef = useRef(null);
     const [state, setState] = useSetState<State>({
         partner: {
             data: [],
@@ -100,7 +101,9 @@ const HomePage: FC = () => {
     }
 
     const onSave = () => {
-        let arr: any[] = [];
+        let arr: any[] = [],
+            ids: any[] = [],
+            count: number = 0;
 
         Object.keys(form.getFieldsValue()).map((data: any) => {
             let item = data.split("_").filter((element: any, index: any) => index < data.split("_").length - 1).join("_");
@@ -113,13 +116,30 @@ const HomePage: FC = () => {
         });
 
         arr.map((data: any) => {
-            return (
-                (form.getFieldsValue()[`${data}_creativeSelected`] === true)?
-                    //console.log(form.getFieldsValue()[`${data}_creativeVersion`])
+                if (form.getFieldsValue()[`${data}_creativeSelected`] === true){
+                    count++;
                     axios.get<TObjects>("/adlibAPI/getTemplate", { params: { tId: form.getFieldsValue()[`${data}_creativeVersion`], pId: form.getFieldsValue().Partner, type: "db" } })
-                        .then((res) => { console.log(res) })
-                :null
-            )
+                    .then((res) => {
+                        Object.keys(res.data).map((key: any) => {
+                            return (key === '_id')?
+                            ids.push(res.data[key]) : null;
+                        })
+
+                        if(ids.length === count){
+                            axios.post("/playgroundAPI/newPlayground", {
+                                templates: ids
+                            }).then((resp) =>  {
+                                if(resp.status === 200){
+                                    Object.keys(resp.data).map((key: any) => {
+                                        return (key === '_id')?
+                                        navigate(`/playground/${resp.data[key]}`) : null;
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            return true;
         })
     }
 
