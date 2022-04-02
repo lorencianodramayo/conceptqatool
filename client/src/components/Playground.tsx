@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { useDispatch } from "react-redux";
 import { useSetState, useSessionStorageState, useMount } from 'ahooks';
 import { useParams, Link } from "react-router-dom";
 import { Layout, Menu, Row, Col } from 'antd';
@@ -11,6 +12,9 @@ import {
 import Stage from './Stage';
 import Preview from './Preview';
 
+//reducers
+import { setData } from '../reducers/playground';
+
 import './Playground.less';
 import logo from "../assets/playground/main-logo.svg";
 import axios from 'axios';
@@ -22,10 +26,13 @@ interface State {
 }
 
 const Playground: FC = () => {
+    const dispatch = useDispatch();
     const { id } = useParams();
     const [, setState] = useSetState<State>({
         data: []
     });
+    
+    const [menuKey, setMenuKey] = useSessionStorageState(`${id}_tab`);
 
     useMount(() => {
         axios.get("/playgroundAPI/", { params: { id } })
@@ -33,6 +40,7 @@ const Playground: FC = () => {
                 res.data.templates.map((data: string) => {
                     axios.get('/playgroundAPI/getTemplate', { params: { id: data } })
                         .then((template) => {
+                            dispatch(setData(template.data));
                             setState((prevState) => ({
                                 data: [template.data, ...prevState.data]
                             }));
@@ -41,14 +49,10 @@ const Playground: FC = () => {
                     return true;
                 });
             })
-    })
-
-    const [menuKey, setMenuKey] = useSessionStorageState('header-menu', {
-        defaultValue: 'playground',
     });
 
     const showPanels = (e: any) => {
-        setMenuKey(e.key)
+       setMenuKey(e.key);
     }
     return (
         <Layout className="Playground">

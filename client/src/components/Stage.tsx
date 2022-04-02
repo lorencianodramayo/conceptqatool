@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
-import axios from 'axios';
-import { Row, Col, Typography, Button, Select, Drawer, Popover, Tooltip } from 'antd';
-import { useSetState, useMount } from 'ahooks';
+import { RootStateOrAny, useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { Row, Col, Typography, Button, Select, Popover, Tooltip } from 'antd';
+import { useSetState, useMount, useLocalStorageState } from 'ahooks';
 import { 
     UnorderedListOutlined, 
     SettingOutlined,
@@ -14,33 +15,53 @@ import {
 } from '@ant-design/icons';
 
 //components
-
 import IFrame from './Stage/IFrame';
+import DrawerElement from '../global/DrawerElement';
 
 import './Stage.less'
+
+//reducers
+import { setSelected } from '../reducers/playground';
 
 const { Title } = Typography;
 const { Option } = Select;
 
 interface State {
     visible: boolean;
+    template: any;
  }
 
 const Stage: FC = () => {
+    const dispatch = useDispatch();
+    const { id } = useParams();
+    const templates = useSelector((state:RootStateOrAny) => state.playground.value);
+    const [defaultTemplate, setDefaultTemplate] = useLocalStorageState(`${id}_default`);
     const [state, setState] = useSetState<State>({
-        visible: false
+        visible: false,
+        template: []
     });
     
     useMount(() => {
-        //axios.get()
+        if(templates !== undefined){
+            if(defaultTemplate === undefined){
+                setDefaultTemplate(templates.data[0]);
+                setState({template: templates.data[0]});
+                dispatch(setSelected(templates.data[0]));
+            }else{
+                setState({template: defaultTemplate});
+                dispatch(setSelected(defaultTemplate));
+            }
+        }
     });
 
-    const handleChange = () => {
-
+    const handleChange = (e:any) => {
+        setState({template: templates.data.find((item: { _id: any; }) => item._id === e)});
+        setDefaultTemplate(templates.data.find((item: { _id: any; }) => item._id === e));
+        dispatch(setSelected(templates.data.find((item: { _id: any; }) => item._id === e)));
     }
 
     const onClose = () => {
-        setState({visible: !state.visible})
+        setState({visible: !state.visible});
     }
 
     return (
@@ -49,15 +70,17 @@ const Stage: FC = () => {
             <Col span={24} className="header">
                 <Row>
                     <Col span={12}>
-                        <Title level={4} style={{margin:0}} className="title">h3. Ant Design</Title>
+                        <Title level={4} style={{margin:0}} className="title">{state.template.name}</Title>
                     </Col>
                     <Col span={12}>
                         <Row style={{justifyContent: "flex-end"}} gutter={[4,0]}>
                             <Col span={8}>
-                                <Select defaultValue="lucy" style={{width: "100%"}} onChange={handleChange}>
-                                    <Option value="jack">300x600</Option>
-                                    <Option value="lucy">728x90</Option>
-                                    <Option value="Yiminghe">120x600</Option>
+                                <Select value={state.template._id} style={{width: "100%"}} onChange={handleChange}>
+                                    {
+                                        templates && templates.data.map((data: any) => {
+                                            return <Option value={data._id} key={data._id}>{data.size}</Option>
+                                        })
+                                    }
                                 </Select>
                             </Col>
                             <Col>
@@ -71,12 +94,7 @@ const Stage: FC = () => {
             <Col span={24} className="content">
                 <IFrame />
             </Col>
-            
-            <Drawer closable={false} maskStyle={{opacity: 0, background: 'transparent'}} title="Basic Drawer" placement="right" onClose={onClose} visible={state.visible}>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-            </Drawer>
+            <DrawerElement isVisible={state.visible} onClose={onClose} />
             <div className="affix-container">
                 <Popover
                     placement="topLeft" 

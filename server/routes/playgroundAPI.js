@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
   PlaygroundModel.findById(req.query.id, (err, success) => {
     return (err) ?
         res.status(500).json({msg: "Sorry, Internal server error"}) : res.json(success)
-  })
+  }).sort([['_id', 1]])
 })
 
 router.post("/newPlayground", (req, res) => {
