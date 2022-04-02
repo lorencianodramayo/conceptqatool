@@ -72,7 +72,7 @@ const Stage: FC = () => {
                 <IFrame />
             </Col>
             
-            <Drawer mask={false} title="Basic Drawer" placement="right" onClose={onClose} visible={state.visible}>
+            <Drawer closable={false} maskStyle={{opacity: 0, background: 'transparent'}} title="Basic Drawer" placement="right" onClose={onClose} visible={state.visible}>
                 <p>Some contents...</p>
                 <p>Some contents...</p>
                 <p>Some contents...</p>
