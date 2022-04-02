@@ -1,5 +1,5 @@
 .Stage{
-    padding: 1em;
+    padding: 0.8em 1em;
     .header{
         padding: 0.5em;
         background-color: #fff;
@@ -25,6 +25,24 @@
         display: flex;
         justify-content: center;
         margin-top: 0.5em;
-        min-height: calc(100vh - 130px); 
+        min-height: calc(100vh - 124px); 
+    }
+
+    .affix-container{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        margin: 1.5em;
+    }
+}
+
+.ant-popover{
+    padding: 0 !important;
+    .ant-popover-inner{
+        background-color: transparent;
+        box-shadow: none;
+        .ant-popover-inner-content{
+            padding: 0 0.3em 0.4em !important;
+        }
     }
 }

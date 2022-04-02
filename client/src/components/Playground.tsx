@@ -14,7 +14,7 @@ import Preview from './Preview';
 import './Playground.less';
 import logo from "../assets/playground/main-logo.svg";
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
 
 interface State {
    data: object;
