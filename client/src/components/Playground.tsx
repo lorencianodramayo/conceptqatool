@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { useDispatch } from "react-redux";
-import { useSetState, useSessionStorageState, useMount } from 'ahooks';
+import { useSetState, useLocalStorageState, useMount } from 'ahooks';
 import { useParams, Link } from "react-router-dom";
 import { Layout, Menu, Row, Col } from 'antd';
 import {
@@ -23,18 +23,20 @@ const { Header, Content } = Layout;
 
 interface State {
     data: any;
+    menuKey: string;
 }
 
 const Playground: FC = () => {
     const dispatch = useDispatch();
     const { id } = useParams();
-    const [, setState] = useSetState<State>({
-        data: []
+    const [menuKey, setMenuKey] = useLocalStorageState(`${id}_tab`);
+    const [state, setState] = useSetState<State>({
+        data: [],
+        menuKey: menuKey === undefined ? 'playground' : menuKey
     });
-    
-    const [menuKey, setMenuKey] = useSessionStorageState(`${id}_tab`);
 
     useMount(() => {
+
         axios.get("/playgroundAPI/", { params: { id } })
             .then((res) => {
                 res.data.templates.map((data: string) => {
@@ -53,6 +55,7 @@ const Playground: FC = () => {
 
     const showPanels = (e: any) => {
        setMenuKey(e.key);
+        setState({ menuKey: e.key })
     }
     return (
         <Layout className="Playground">
@@ -67,7 +70,7 @@ const Playground: FC = () => {
                         <Menu
                             theme="dark"
                             mode="horizontal"
-                            defaultSelectedKeys={[`${menuKey}`]}
+                            defaultSelectedKeys={[state.menuKey]}
                             onClick={(e) => showPanels(e)}
                         >
                             <Menu.Item key="playground" icon={<ExperimentOutlined />}>
@@ -82,7 +85,7 @@ const Playground: FC = () => {
             </Header>
             <Content>
                 {
-                    menuKey === 'playground' ? <Stage /> : <Preview />
+                    state.menuKey === 'playground' ? <Stage /> : <Preview />
                 }
             </Content>
         </Layout>
