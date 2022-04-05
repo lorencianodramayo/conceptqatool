@@ -36,6 +36,7 @@ const Playground: FC = () => {
     });
 
     useEffect(()=> {
+        
         axios.get("/playgroundAPI/", { params: { id } })
             .then((res) => {
                 res.data.templates.map((data: string) => {

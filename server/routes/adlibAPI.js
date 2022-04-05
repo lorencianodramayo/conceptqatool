@@ -209,29 +209,50 @@ async function getFiles(obj, res) {
                 updatedIndex =
                   html.split("</html>")[0] +
                   `<script>
-                    setInterval(function(){
-                        parent.postMessage({
-                            type: 'CREATIVE_TIME', gsap
-                        }, '*');
-                    },100);
-                    
-                    window.addEventListener("message",
-                    (event) => {
-                        if(typeof event.data === "object"){
-                            defaultValues= event.data;
-                        }
-
-                        if(event.data === "pause"){
-                            gwd.auto_PauseBtnClick();
-                        }else if(event.data === "play"){
-                            gwd.auto_PlayBtnClick();
-                        }
-                    },
-                    false
-                );
-              </script></html>`;
-                //reconvert back to utf8
-                entries.setData(Buffer.from(updatedIndex, "utf8"));
+                   window.addEventListener("message",
+                   (event) => {
+                       if(typeof event.data === "object"){
+                           defaultValues= event.data;
+                       }else{
+                         if(event.data === "pause"){
+                           gwd.auto_PauseBtnClick();
+                         }else if(event.data === "play"){
+                           gwd.auto_PlayBtnClick();
+                         }else{
+                           if(typeof Adlib!=='undefined'){
+                               Adlib.localTimeline = function(status){
+                                 status = status||null;
+                                 switch(status){
+                                     case "PLAY":
+                                       if(_obj.timelineEvent == null){
+                                           var t = "0.0";
+                                           _obj.timelineEvent = setInterval(function(){
+                                               t = (gsap.globalTimeline.time().toFixed(1)> 0.5)? gsap.globalTimeline.time().toFixed(1) : t ;
+                                               parent.postMessage({
+                                                 type: 'CREATIVE_TIME', t
+                                               }, '*');
+                                           }, 100);
+                                       }
+                                     break;
+                                     case "PAUSE":
+                                         clearInterval(_obj.timelineEvent);
+                                         _obj.timelineEvent=null;
+                                     break;
+                                     case "END":
+                                         clearInterval(_obj.timelineEvent);
+                                         _obj.timelineEvent=null;
+                                     break;
+                                 }
+                               }
+                             }
+                         }
+                       }
+                   },
+                   false
+               );
+             </script></html>`;
+            //reconvert back to utf8
+            entries.setData(Buffer.from(updatedIndex, "utf8"));
             } else if ([".png", ".jpg", ".jpeg", ".gif"].some((t) =>
                 entries.name.includes(t)
             )) {
