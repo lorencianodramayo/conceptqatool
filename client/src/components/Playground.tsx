@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import { useSetState, useLocalStorageState, useMount } from 'ahooks';
 import { useParams, Link } from "react-router-dom";
@@ -35,11 +35,11 @@ const Playground: FC = () => {
         menuKey: menuKey === undefined ? 'playground' : menuKey
     });
 
-    useMount(() => {
-
+    useEffect(()=> {
         axios.get("/playgroundAPI/", { params: { id } })
             .then((res) => {
                 res.data.templates.map((data: string) => {
+                    console.log(data);
                     axios.get('/playgroundAPI/getTemplate', { params: { id: data } })
                         .then((template) => {
                             dispatch(setData(template.data));
@@ -47,11 +47,9 @@ const Playground: FC = () => {
                                 data: [template.data, ...prevState.data]
                             }));
                         });
-
-                    return true;
                 });
             })
-    });
+    },[])
 
     const showPanels = (e: any) => {
        setMenuKey(e.key);

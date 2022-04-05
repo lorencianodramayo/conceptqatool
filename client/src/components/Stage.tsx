@@ -46,6 +46,7 @@ const Stage: FC = () => {
     });
 
     useMount(() => {
+        console.log("AW")
         if (templates !== undefined) {
             if (defaultTemplate === undefined) {
                 setDefaultTemplate(templates.data[0]);
@@ -76,7 +77,6 @@ const Stage: FC = () => {
     }
 
     const onClose = () => {
-        console.log(templates)
         setState({ visible: !state.visible });
         form.setFieldsValue(sessionVariant && sessionVariant[templates.selectedID] !== undefined ? sessionVariant[templates.selectedID] : templates.selectedDV);
         setSessionVariant(templates.entity);
